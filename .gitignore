@@ -1,0 +1,11 @@
+documentation/
+node_modules/
+build/
+__tests__/
+examples/
+jest.config.js
+package.json
+README.md
+rollup.config.js
+tsconfig.json
+yarn.lock
