@@ -98,7 +98,6 @@ export function usePricingSignup(): UseSignupResult {
         email.trim()
       ) || [];
 
-    console.log("adminEmails", adminEmails);
     if (
       subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
       !adminEmails.includes(email)
@@ -157,7 +156,6 @@ export function usePricingSignup(): UseSignupResult {
       setSelectedTier(null);
       return true;
     } catch (error) {
-      console.error("Signup error:", error);
       trackSignupError(
         error instanceof Error ? error.message : "Failed to sign up",
         selectedTier

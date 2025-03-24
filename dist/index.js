@@ -1687,7 +1687,6 @@ function usePricingSignup() {
         // Set maximum allowed signups per landing page
         const MAX_SIGNUPS_PER_PAGE = 1;
         const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [];
-        console.log("adminEmails", adminEmails);
         if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
             !adminEmails.includes(email)) {
             // Block the signup for this specific landing page
@@ -1732,7 +1731,6 @@ function usePricingSignup() {
             return true;
         }
         catch (error) {
-            console.error("Signup error:", error);
             trackSignupError(error instanceof Error ? error.message : "Failed to sign up", selectedTier
                 ? {
                     id: selectedTier.id.toString(),
