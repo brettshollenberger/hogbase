@@ -1401,8 +1401,12 @@ const updateUrlWithExperiment = (experimentName, value) => {
 };
 
 // Environment configuration
+const REQUIRED_POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
+if (!REQUIRED_POSTHOG_KEY) {
+    console.error('PostHog key is not configured. Please set VITE_POSTHOG_KEY in your .env file.');
+}
 const config = {
-    posthogKey: process.env.VITE_POSTHOG_KEY || 'test-key',
+    posthogKey: REQUIRED_POSTHOG_KEY || '',
     posthogApiHost: "https://us.i.posthog.com",
     posthogUiHost: "https://us.posthog.com",
 };
@@ -1790,6 +1794,8 @@ Button.displayName = "Button";
 
 const TrackedButton = ({ text, className = '', onClick, variant = 'default', size = 'default', href, section = 'general', icon, iconPosition = 'right', children, ...restProps }) => {
     const handleClick = () => {
+        debugger;
+        console.log(`Doing a big boi track ${text} ${section}`);
         trackCTAClick(text, section);
         onClick?.();
     };
