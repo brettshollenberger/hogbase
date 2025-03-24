@@ -5,7 +5,7 @@ import {
   trackSignupAttempt,
   trackSignupSuccess,
   trackSignupError,
-} from "@/utils/analytics";
+} from "../utils/analytics";
 
 // Types
 export interface PricingPlan {
@@ -13,14 +13,17 @@ export interface PricingPlan {
   name: string;
   price: number;
   billing: string;
-  // Add other properties as needed, but these are the ones used in actions
+  icon: React.ReactNode;
+  features: string[];
+  cta: string;
+  color: string;
+  highlighted: boolean;
 }
 
 export interface UseSignupResult {
   email: string;
   setEmail: (email: string) => void;
   selectedTier: PricingPlan | null;
-  setSelectedTier: (plan: PricingPlan | null) => void;
   isSubmitting: boolean;
   showModal: boolean;
   setShowModal: (show: boolean) => void;
@@ -139,6 +142,7 @@ export function usePricingSignup(): UseSignupResult {
         id: selectedTier.id.toString(),
         name: selectedTier.name,
         price: selectedTier.price,
+        email,
       });
 
       // Increment signup count for this subdomain only

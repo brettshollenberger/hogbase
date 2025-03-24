@@ -1,37 +1,7 @@
+import { __assign, __awaiter, __generator } from 'tslib';
 import require$$0, { createContext, useState, useEffect, useContext } from 'react';
-
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
-
-
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-
-typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
+import { toast } from 'sonner';
+import posthog from 'posthog-js';
 
 var jsxRuntime = {exports: {}};
 
@@ -1534,5 +1504,249 @@ function useExperiment(experimentName, defaultValue) {
     return variant || defaultValue;
 }
 
-export { ExperimentsProvider, useExperiment, useExperimentsContext };
+var posthog_key = import.meta.env.VITE_POSTHOG_KEY;
+var posthog_local_storage_key = "ph_".concat(posthog_key, "_posthog");
+posthog.init(posthog_key, {
+    api_host: "https://us.i.posthog.com",
+    ui_host: "https://us.posthog.com",
+    person_profiles: "always",
+});
+/**
+ * Identify a user with PostHog.
+ *
+ * If no user ID is provided, it will use the current distinct ID.
+ * If the provided user ID is different from the current distinct ID, it will call PostHog's identify method.
+ *
+ * @param userId The ID of the user to identify.
+ * @param traits Additional traits to identify the user with.
+ */
+var identify = function (userId, traits) {
+    var _a, _b;
+    var currentDistinctId = posthog.get_distinct_id();
+    if (!userId) {
+        var storedUser = localStorage.getItem(posthog_local_storage_key) || '';
+        var parsedId = (_a = JSON.parse(storedUser)) === null || _a === void 0 ? void 0 : _a.distinct_id;
+        if (parsedId && typeof parsedId === 'string') {
+            userId = parsedId;
+            window.__user = {
+                id: userId,
+            };
+        }
+    }
+    if (currentDistinctId !== userId || ((_b = window.__user) === null || _b === void 0 ? void 0 : _b.email) !== (traits === null || traits === void 0 ? void 0 : traits.email)) {
+        if (userId) {
+            posthog.identify(userId, traits);
+            window.__user = __assign({ id: userId }, traits);
+        }
+    }
+};
+var initializeAnalytics = function (user) {
+    identify(user === null || user === void 0 ? void 0 : user.id, user);
+};
+var trackEvent = function (eventName, properties) {
+    posthog.capture(eventName, properties);
+};
+var trackPageView = function (pageName, section) {
+    trackEvent("page_view", {
+        page_name: pageName,
+        section: section,
+    });
+};
+var trackLinkClick = function (linkText, section) {
+    trackEvent("link_clicked", {
+        link_text: linkText,
+        section: section,
+    });
+};
+var trackCTAClick = function (buttonText, section) {
+    trackEvent("cta_clicked", {
+        button_text: buttonText,
+        section: section,
+    });
+};
+var trackTierSelection = function (tier) {
+    trackEvent("tier_selected", {
+        tier_id: tier.id,
+        tier_name: tier.name,
+        price: tier.price,
+    });
+};
+var trackSignupAttempt = function (tier) {
+    trackEvent("signup_attempt", {
+        tier_id: tier.id,
+        tier_name: tier.name,
+        price: tier.price,
+    });
+};
+var trackSignupSuccess = function (tier) {
+    var _a;
+    var product = window.location.hostname.split(".")[0];
+    if ((_a = window.__user) === null || _a === void 0 ? void 0 : _a.id) {
+        identify(window.__user.id, {
+            email: window.__user.email || tier.email,
+            name: window.__user.name || tier.name,
+            signup_date: new Date().toISOString(),
+            initial_tier: tier.name,
+            initial_price: tier.price,
+        });
+    }
+    trackEvent("signup_success", {
+        tier_id: tier.id,
+        tier_name: tier.name,
+        price: tier.price,
+        product: product,
+    });
+    window.gtag &&
+        window.gtag("event", "signup_success", {
+            value: tier.price,
+            currency: "USD",
+            tier_name: tier.name,
+            product: product,
+        });
+};
+var trackSignupError = function (error, tier) {
+    trackEvent("signup_error", __assign({ error: error }, (tier && {
+        tier_id: tier.id,
+        tier_name: tier.name,
+    })));
+};
+
+/**
+ * Custom hook to manage pricing plan selection and signup process
+ */
+function usePricingSignup() {
+    var _this = this;
+    var _a = useState(""), email = _a[0], setEmail = _a[1];
+    var _b = useState(null), selectedTier = _b[0], setSelectedTier = _b[1];
+    var _c = useState(false), isSubmitting = _c[0], setIsSubmitting = _c[1];
+    var _d = useState(false), showModal = _d[0], setShowModal = _d[1];
+    /**
+     * Validates email format
+     */
+    var validateEmail = function (email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    /**
+     * Handles plan selection and tracks the selection in analytics
+     */
+    var handlePlanClick = function (plan) {
+        setSelectedTier(plan);
+        setShowModal(true);
+        trackTierSelection({
+            id: plan.id.toString(),
+            name: plan.name,
+            price: plan.price,
+        });
+    };
+    /**
+     * Handles the signup form submission
+     * Returns true if signup was successful, false otherwise
+     */
+    var handleSubmit = function (e) { return __awaiter(_this, void 0, void 0, function () {
+        var hostname, subdomain, signupCountsJSON, signupCounts, subdomainCount, MAX_SIGNUPS_PER_PAGE, adminEmails, response, data, error_1;
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    e.preventDefault();
+                    if (!email || !validateEmail(email)) {
+                        toast.error("Please enter a valid email address");
+                        return [2 /*return*/, false];
+                    }
+                    if (!selectedTier) {
+                        toast.error("Please select a plan");
+                        return [2 /*return*/, false];
+                    }
+                    hostname = window.location.hostname;
+                    subdomain = hostname.split(".")[0];
+                    signupCountsJSON = localStorage.getItem("signupCounts") || "{}";
+                    signupCounts = JSON.parse(signupCountsJSON);
+                    subdomainCount = signupCounts[subdomain] || 0;
+                    MAX_SIGNUPS_PER_PAGE = 1;
+                    adminEmails = ((_a = import.meta.env.VITE_ADMIN_EMAILS) === null || _a === void 0 ? void 0 : _a.split(",").map(function (email) {
+                        return email.trim();
+                    })) || [];
+                    if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
+                        !adminEmails.includes(email)) {
+                        // Block the signup for this specific landing page
+                        toast.success("You're on the list! We'll let you know when a spot opens up!");
+                        return [2 /*return*/, false];
+                    }
+                    trackSignupAttempt({
+                        id: selectedTier.id.toString(),
+                        name: selectedTier.name,
+                        price: selectedTier.price,
+                    });
+                    setIsSubmitting(true);
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 4, 5, 6]);
+                    return [4 /*yield*/, fetch("https://cprlzjigtonyooedikbe.supabase.co/functions/v1/signup", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer ".concat(import.meta.env.VITE_SUPABASE_KEY),
+                            },
+                            body: JSON.stringify({
+                                email: email,
+                                tierId: selectedTier.id,
+                            }),
+                        })];
+                case 2:
+                    response = _b.sent();
+                    return [4 /*yield*/, response.json()];
+                case 3:
+                    data = _b.sent();
+                    if (!response.ok) {
+                        throw new Error(data.error || "Failed to sign up");
+                    }
+                    trackSignupSuccess({
+                        id: selectedTier.id.toString(),
+                        name: selectedTier.name,
+                        price: selectedTier.price,
+                        email: email,
+                    });
+                    // Increment signup count for this subdomain only
+                    signupCounts[subdomain] = subdomainCount + 1;
+                    localStorage.setItem("signupCounts", JSON.stringify(signupCounts));
+                    toast.success("Thank you for signing up. We'll be in touch soon!");
+                    setEmail("");
+                    setShowModal(false);
+                    setSelectedTier(null);
+                    return [2 /*return*/, true];
+                case 4:
+                    error_1 = _b.sent();
+                    console.error("Signup error:", error_1);
+                    trackSignupError(error_1 instanceof Error ? error_1.message : "Failed to sign up", selectedTier
+                        ? {
+                            id: selectedTier.id.toString(),
+                            name: selectedTier.name,
+                        }
+                        : undefined);
+                    toast.error(error_1 instanceof Error
+                        ? error_1.message
+                        : "Failed to sign up. Please try again.");
+                    return [2 /*return*/, false];
+                case 5:
+                    setIsSubmitting(false);
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
+            }
+        });
+    }); };
+    return {
+        email: email,
+        setEmail: setEmail,
+        selectedTier: selectedTier,
+        isSubmitting: isSubmitting,
+        showModal: showModal,
+        setShowModal: setShowModal,
+        handlePlanClick: handlePlanClick,
+        handleSubmit: handleSubmit,
+        validateEmail: validateEmail,
+    };
+}
+
+export { ExperimentsProvider, identify, initializeAnalytics, trackCTAClick, trackEvent, trackLinkClick, trackPageView, trackSignupAttempt, trackSignupError, trackSignupSuccess, trackTierSelection, useExperiment, useExperimentsContext, usePricingSignup };
 //# sourceMappingURL=index.esm.js.map

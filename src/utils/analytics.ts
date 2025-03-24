@@ -34,9 +34,9 @@ export const identify = (userId?: string, traits?: Record<string, any>) => {
   const currentDistinctId = posthog.get_distinct_id();
 
   if (!userId) {
-    const storedUser = localStorage.getItem(posthog_local_storage_key);
+    const storedUser = localStorage.getItem(posthog_local_storage_key) || '';
     const parsedId = JSON.parse(storedUser)?.distinct_id;
-    if (parsedId) {
+    if (parsedId && typeof parsedId === 'string') {
       userId = parsedId;
       window.__user = {
         id: userId,

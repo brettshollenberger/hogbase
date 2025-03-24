@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, ChangeEvent } from 'react';
-import { ExperimentsContextValue, ExperimentsProviderProps, Experiment } from './types';
+import { ExperimentsContextType, ExperimentsProviderProps, Experiment } from './types';
 import { isLovableEnvironment, isAdminMode } from './utils/environment';
 import { parseExperimentParams, updateUrlWithExperiment } from './utils/url';
 import { trackExperimentView } from './utils/tracking';
 
-const ExperimentsContext = createContext<ExperimentsContextValue | undefined>(undefined);
+const ExperimentsContext = createContext<ExperimentsContextType | undefined>(undefined);
 
 export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
   experiments,
@@ -59,7 +59,7 @@ export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
     setAdminPanelVisible((prev: boolean) => !prev);
   };
 
-  const value: ExperimentsContextValue = {
+  const value: ExperimentsContextType = {
     experiments,
     activeExperiments,
     isLovableEnvironment: lovableEnvironment,
@@ -160,7 +160,7 @@ const AdminPanel: React.FC = () => {
   );
 };
 
-export const useExperimentsContext = (): ExperimentsContextValue => {
+export const useExperimentsContext = (): ExperimentsContextType => {
   const context = useContext(ExperimentsContext);
   if (!context) {
     throw new Error('useExperimentsContext must be used within ExperimentsProvider');

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Experiment } from '../types';
+import type { Experiment, ExperimentsContextType } from '../types';
 interface ExperimentsProviderProps {
     experiments: Experiment[];
     showAdminPanel?: boolean;

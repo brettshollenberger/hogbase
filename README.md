@@ -6,22 +6,18 @@ A powerful A/B testing library for web applications that integrates with Google 
 
 - URL parameter-driven experiments
 - PostHog integration for tracking
-- Lovable environment detection
 - Admin panel for easy variant switching
-- TypeScript support
-- React hooks for easy component integration
-
-## Installation
-
-```bash
-npm install @hogbase/experiment-library
-# or
-yarn add @hogbase/experiment-library
-```
+- Lovable integration
 
 ## Basic Usage
 
-1. Define your experiments:
+1. Define URL params in your Google Ads campaigns using the prefix phexp ("posthog experiment")
+
+```tsx
+?phexp_copy=time_savings&phexp_pricing=low_effort
+```
+
+2. Define your experiments:
 
 ```javascript
 // experiments-config.js
@@ -34,10 +30,10 @@ export const experiments = [
 ];
 ```
 
-2. Wrap your app with the provider:
+3. Wrap your app with the provider:
 
 ```javascript
-import { ExperimentsProvider } from "@your-org/experiment-library";
+import { ExperimentsProvider } from "@hogbase";
 import { experiments } from "./experiments-config";
 
 function App() {
@@ -49,10 +45,10 @@ function App() {
 }
 ```
 
-3. Use experiments in components:
+4. Use experiments in components:
 
 ```javascript
-import { useExperiment } from "@your-org/experiment-library";
+import { useExperiment } from "@hogbase";
 
 function HeroSection() {
   const copyVariant = useExperiment("copy", "default");
@@ -66,28 +62,10 @@ function HeroSection() {
 }
 ```
 
-## URL Parameters
+5. Set an environment variable for PostHog
 
-Control experiments via URL parameters with the `phexp_` prefix:
-
-```
-https://your-app.com/?phexp_copy=time_savings&phexp_pricing=low_effort
-```
-
-## PostHog Integration
-
-```javascript
-import posthog from "posthog-js";
-
-// Initialize PostHog
-posthog.init("your-project-api-key", {
-  api_host: "https://app.posthog.com",
-});
-
-// Pass the client to ExperimentsProvider
-<ExperimentsProvider experiments={experiments} posthogClient={posthog}>
-  <YourApp />
-</ExperimentsProvider>;
+```bash
+export POSTHOG_API_KEY=your-project-api-key
 ```
 
 ## Admin Panel

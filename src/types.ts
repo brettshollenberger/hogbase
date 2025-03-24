@@ -15,7 +15,7 @@ export interface ExperimentsProviderProps {
   showAdminPanel?: boolean;
 }
 
-export interface ExperimentsContextValue {
+export interface ExperimentsContextType {
   experiments: Array<Experiment>;
   activeExperiments: Record<string, string>;
   isLovableEnvironment: boolean;

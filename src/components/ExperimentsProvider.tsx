@@ -10,8 +10,13 @@ interface ExperimentsProviderProps {
 
 export const ExperimentsContext = createContext<ExperimentsContextType>({
   experiments: [],
+  activeExperiments: {},
+  isLovableEnvironment: false,
+  adminPanelVisible: false,
   getExperimentVariant: () => null,
   setExperimentVariant: () => {},
+  getExperimentConfig: () => null,
+  toggleAdminPanel: () => {},
 });
 
 export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
@@ -20,6 +25,8 @@ export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
   children,
 }) => {
   const [variants, setVariants] = useState<Record<string, string>>({});
+  const [adminPanelVisible, setAdminPanelVisible] = useState(showAdminPanel);
+  const isLovableEnvironment = window.location.hostname === 'localhost';
 
   useEffect(() => {
     // Load variants from URL parameters
@@ -52,6 +59,14 @@ export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
     return variants[experimentName] || null;
   };
 
+  const getExperimentConfig = (experimentName: string): Experiment | null => {
+    return experiments.find((e) => e.name === experimentName) || null;
+  };
+
+  const toggleAdminPanel = () => {
+    setAdminPanelVisible(!adminPanelVisible);
+  };
+
   const setExperimentVariant = (experimentName: string, variant: string) => {
     const experiment = experiments.find((e) => e.name === experimentName);
     if (experiment && experiment.possibleValues.includes(variant)) {
@@ -72,12 +87,17 @@ export const ExperimentsProvider: React.FC<ExperimentsProviderProps> = ({
     <ExperimentsContext.Provider
       value={{
         experiments,
+        activeExperiments: variants,
+        isLovableEnvironment,
+        adminPanelVisible,
         getExperimentVariant,
         setExperimentVariant,
+        getExperimentConfig,
+        toggleAdminPanel,
       }}
     >
       {children}
-      {showAdminPanel && (
+      {adminPanelVisible && (
         <div
           style={{
             position: 'fixed',

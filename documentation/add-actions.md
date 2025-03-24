@@ -4,7 +4,7 @@ Hogbase is an A/B testing library for web applications. It is used to run experi
 
 ## Task
 
-We're going to add a set of common `actions` that our landing pages use. These are for the pricing page.
+We're going to add useSignup as a shared hook.
 
 ## Implementation
 
