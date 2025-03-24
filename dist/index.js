@@ -1687,6 +1687,7 @@ function usePricingSignup() {
         // Set maximum allowed signups per landing page
         const MAX_SIGNUPS_PER_PAGE = 1;
         const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [];
+        console.log("adminEmails", adminEmails);
         if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
             !adminEmails.includes(email)) {
             // Block the signup for this specific landing page
@@ -1700,7 +1701,7 @@ function usePricingSignup() {
         });
         setIsSubmitting(true);
         try {
-            const response = await fetch("https://cprlzjigtonyooedikbe.supabase.co/functions/v1/signup", {
+            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
