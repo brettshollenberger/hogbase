@@ -1,12 +1,17 @@
 import posthog from "posthog-js";
+import { config } from './config';
 
-const posthog_key = import.meta.env.VITE_POSTHOG_KEY!;
-const posthog_local_storage_key = `ph_${posthog_key}_posthog`;
-posthog.init(posthog_key, {
-  api_host: "https://us.i.posthog.com",
-  ui_host: "https://us.posthog.com",
-  person_profiles: "always",
-});
+// Get PostHog key from config
+const posthog_local_storage_key = `ph_${config.posthogKey}_posthog`;
+
+// Only initialize PostHog if we're in a browser environment
+if (typeof window !== 'undefined') {
+  posthog.init(config.posthogKey, {
+    api_host: config.posthogApiHost,
+    ui_host: config.posthogUiHost,
+    person_profiles: "always",
+  });
+}
 
 // Extend Window interface to include __user
 declare global {
