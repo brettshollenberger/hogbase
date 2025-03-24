@@ -2,77 +2,6 @@ import require$$0, { createContext, useState, useEffect, useContext } from 'reac
 import posthog from 'posthog-js';
 import { toast } from 'sonner';
 
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
-
-
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
-function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-}
-
-typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
-
 var jsxRuntime = {exports: {}};
 
 var reactJsxRuntime_production_min = {};
@@ -1428,44 +1357,44 @@ if (process.env.NODE_ENV === 'production') {
 
 var jsxRuntimeExports = jsxRuntime.exports;
 
-var isLovableEnvironment = function () {
+const isLovableEnvironment = () => {
     if (typeof window === 'undefined')
         return false;
     return (window.location.hostname.includes('lovable.ai') ||
         document.querySelector('.lovable-editor') !== null ||
         new URLSearchParams(window.location.search).has('lovable_editor'));
 };
-var isAdminMode = function () {
+const isAdminMode = () => {
     if (typeof window === 'undefined')
         return false;
     return (isLovableEnvironment() ||
         new URLSearchParams(window.location.search).has('admin'));
 };
 
-var EXPERIMENT_PARAM_PREFIX = 'phexp_';
-var parseExperimentParams = function () {
+const EXPERIMENT_PARAM_PREFIX = 'phexp_';
+const parseExperimentParams = () => {
     if (typeof window === 'undefined')
         return {};
-    var urlParams = new URLSearchParams(window.location.search);
-    var experiments = {};
-    urlParams.forEach(function (value, key) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const experiments = {};
+    urlParams.forEach((value, key) => {
         if (key.startsWith(EXPERIMENT_PARAM_PREFIX)) {
-            var experimentName = key.substring(EXPERIMENT_PARAM_PREFIX.length);
+            const experimentName = key.substring(EXPERIMENT_PARAM_PREFIX.length);
             experiments[experimentName] = value;
         }
     });
     return experiments;
 };
-var updateUrlWithExperiment = function (experimentName, value) {
+const updateUrlWithExperiment = (experimentName, value) => {
     if (typeof window === 'undefined')
         return;
-    var url = new URL(window.location.href);
-    url.searchParams.set("".concat(EXPERIMENT_PARAM_PREFIX).concat(experimentName), value);
+    const url = new URL(window.location.href);
+    url.searchParams.set(`${EXPERIMENT_PARAM_PREFIX}${experimentName}`, value);
     window.history.replaceState({}, '', url.toString());
 };
 
-var posthog_key = import.meta.env.VITE_POSTHOG_KEY;
-var posthog_local_storage_key = "ph_".concat(posthog_key, "_posthog");
+const posthog_key = import.meta.env.VITE_POSTHOG_KEY;
+const posthog_local_storage_key = `ph_${posthog_key}_posthog`;
 posthog.init(posthog_key, {
     api_host: "https://us.i.posthog.com",
     ui_host: "https://us.posthog.com",
@@ -1480,12 +1409,11 @@ posthog.init(posthog_key, {
  * @param userId The ID of the user to identify.
  * @param traits Additional traits to identify the user with.
  */
-var identify = function (userId, traits) {
-    var _a, _b;
-    var currentDistinctId = posthog.get_distinct_id();
+const identify = (userId, traits) => {
+    const currentDistinctId = posthog.get_distinct_id();
     if (!userId) {
-        var storedUser = localStorage.getItem(posthog_local_storage_key) || '';
-        var parsedId = (_a = JSON.parse(storedUser)) === null || _a === void 0 ? void 0 : _a.distinct_id;
+        const storedUser = localStorage.getItem(posthog_local_storage_key) || '';
+        const parsedId = JSON.parse(storedUser)?.distinct_id;
         if (parsedId && typeof parsedId === 'string') {
             userId = parsedId;
             window.__user = {
@@ -1493,55 +1421,57 @@ var identify = function (userId, traits) {
             };
         }
     }
-    if (currentDistinctId !== userId || ((_b = window.__user) === null || _b === void 0 ? void 0 : _b.email) !== (traits === null || traits === void 0 ? void 0 : traits.email)) {
+    if (currentDistinctId !== userId || window.__user?.email !== traits?.email) {
         if (userId) {
             posthog.identify(userId, traits);
-            window.__user = __assign({ id: userId }, traits);
+            window.__user = {
+                id: userId,
+                ...traits,
+            };
         }
     }
 };
-var initializeAnalytics = function (user) {
-    identify(user === null || user === void 0 ? void 0 : user.id, user);
+const initializeAnalytics = (user) => {
+    identify(user?.id, user);
 };
-var trackEvent = function (eventName, properties) {
+const trackEvent = (eventName, properties) => {
     posthog.capture(eventName, properties);
 };
-var trackPageView = function (pageName, section) {
+const trackPageView = (pageName, section) => {
     trackEvent("page_view", {
         page_name: pageName,
-        section: section,
+        section,
     });
 };
-var trackLinkClick = function (linkText, section) {
+const trackLinkClick = (linkText, section) => {
     trackEvent("link_clicked", {
         link_text: linkText,
-        section: section,
+        section,
     });
 };
-var trackCTAClick = function (buttonText, section) {
+const trackCTAClick = (buttonText, section) => {
     trackEvent("cta_clicked", {
         button_text: buttonText,
-        section: section,
+        section,
     });
 };
-var trackTierSelection = function (tier) {
+const trackTierSelection = (tier) => {
     trackEvent("tier_selected", {
         tier_id: tier.id,
         tier_name: tier.name,
         price: tier.price,
     });
 };
-var trackSignupAttempt = function (tier) {
+const trackSignupAttempt = (tier) => {
     trackEvent("signup_attempt", {
         tier_id: tier.id,
         tier_name: tier.name,
         price: tier.price,
     });
 };
-var trackSignupSuccess = function (tier) {
-    var _a;
-    var product = window.location.hostname.split(".")[0];
-    if ((_a = window.__user) === null || _a === void 0 ? void 0 : _a.id) {
+const trackSignupSuccess = (tier) => {
+    const product = window.location.hostname.split(".")[0];
+    if (window.__user?.id) {
         identify(window.__user.id, {
             email: window.__user.email || tier.email,
             name: window.__user.name || tier.name,
@@ -1564,79 +1494,83 @@ var trackSignupSuccess = function (tier) {
             product: product,
         });
 };
-var trackSignupError = function (error, tier) {
-    trackEvent("signup_error", __assign({ error: error }, (tier && {
-        tier_id: tier.id,
-        tier_name: tier.name,
-    })));
+const trackSignupError = (error, tier) => {
+    trackEvent("signup_error", {
+        error,
+        ...(tier && {
+            tier_id: tier.id,
+            tier_name: tier.name,
+        }),
+    });
 };
-var trackExperimentView = function (posthogClient, experiment, variant, source) {
-    if (source === void 0) { source = 'url'; }
+const trackExperimentView = (posthogClient, experiment, variant, source = 'url') => {
     if (!posthogClient)
         return;
     posthogClient.capture('experiment_view', {
-        experiment: experiment,
-        variant: variant,
-        source: source
+        experiment,
+        variant,
+        source
     });
 };
 
-var ExperimentsContext = createContext(undefined);
-var ExperimentsProvider = function (_a) {
-    var experiments = _a.experiments, posthogClient = _a.posthogClient, children = _a.children, _b = _a.defaultValues, defaultValues = _b === void 0 ? {} : _b, _c = _a.showAdminPanel, showAdminPanel = _c === void 0 ? false : _c;
-    var _d = useState({}), activeExperiments = _d[0], setActiveExperiments = _d[1];
-    var _e = useState(false), adminPanelVisible = _e[0], setAdminPanelVisible = _e[1];
-    var lovableEnvironment = isLovableEnvironment();
-    useEffect(function () {
+const ExperimentsContext = createContext(undefined);
+const ExperimentsProvider = ({ experiments, posthogClient, children, defaultValues = {}, showAdminPanel = false, }) => {
+    const [activeExperiments, setActiveExperiments] = useState({});
+    const [adminPanelVisible, setAdminPanelVisible] = useState(false);
+    const lovableEnvironment = isLovableEnvironment();
+    useEffect(() => {
         // Initialize from URL parameters
-        var urlExperiments = parseExperimentParams();
-        setActiveExperiments(function (prev) { return (__assign(__assign(__assign({}, defaultValues), prev), urlExperiments)); });
+        const urlExperiments = parseExperimentParams();
+        setActiveExperiments((prev) => ({
+            ...defaultValues,
+            ...prev,
+            ...urlExperiments
+        }));
         // Initialize admin panel visibility
         setAdminPanelVisible(showAdminPanel || isAdminMode());
     }, []);
-    useEffect(function () {
+    useEffect(() => {
         // Track experiments in PostHog
-        Object.entries(activeExperiments).forEach(function (_a) {
-            var experiment = _a[0], variant = _a[1];
+        Object.entries(activeExperiments).forEach(([experiment, variant]) => {
             if (typeof variant === 'string') {
                 trackExperimentView(posthogClient, experiment, variant);
             }
         });
     }, [activeExperiments, posthogClient]);
-    var setExperimentVariant = function (experimentName, value) {
-        setActiveExperiments(function (prev) {
-            var _a;
-            return (__assign(__assign({}, prev), (_a = {}, _a[experimentName] = value, _a)));
-        });
+    const setExperimentVariant = (experimentName, value) => {
+        setActiveExperiments((prev) => ({
+            ...prev,
+            [experimentName]: value
+        }));
         updateUrlWithExperiment(experimentName, value);
     };
-    var getExperimentVariant = function (experimentName) {
+    const getExperimentVariant = (experimentName) => {
         return activeExperiments[experimentName] || null;
     };
-    var getExperimentConfig = function (experimentName) {
-        return experiments.find(function (exp) { return exp.name === experimentName; }) || null;
+    const getExperimentConfig = (experimentName) => {
+        return experiments.find((exp) => exp.name === experimentName) || null;
     };
-    var toggleAdminPanel = function () {
-        setAdminPanelVisible(function (prev) { return !prev; });
+    const toggleAdminPanel = () => {
+        setAdminPanelVisible((prev) => !prev);
     };
-    var value = {
-        experiments: experiments,
-        activeExperiments: activeExperiments,
+    const value = {
+        experiments,
+        activeExperiments,
         isLovableEnvironment: lovableEnvironment,
-        adminPanelVisible: adminPanelVisible,
-        setExperimentVariant: setExperimentVariant,
-        getExperimentVariant: getExperimentVariant,
-        getExperimentConfig: getExperimentConfig,
-        toggleAdminPanel: toggleAdminPanel
+        adminPanelVisible,
+        setExperimentVariant,
+        getExperimentVariant,
+        getExperimentConfig,
+        toggleAdminPanel
     };
     return (jsxRuntimeExports.jsxs(ExperimentsContext.Provider, { value: value, children: [children, adminPanelVisible && jsxRuntimeExports.jsx(AdminPanel, {})] }));
 };
-var AdminPanel = function () {
-    var context = useContext(ExperimentsContext);
+const AdminPanel = () => {
+    const context = useContext(ExperimentsContext);
     if (!context)
         throw new Error('AdminPanel must be used within ExperimentsProvider');
-    var experiments = context.experiments, activeExperiments = context.activeExperiments, setExperimentVariant = context.setExperimentVariant, toggleAdminPanel = context.toggleAdminPanel, isLovableEnvironment = context.isLovableEnvironment;
-    var panelStyle = {
+    const { experiments, activeExperiments, setExperimentVariant, toggleAdminPanel, isLovableEnvironment } = context;
+    const panelStyle = {
         position: 'fixed',
         bottom: '20px',
         right: '20px',
@@ -1654,20 +1588,20 @@ var AdminPanel = function () {
                             color: '#ffffff',
                             cursor: 'pointer',
                             fontSize: '20px'
-                        }, children: "\u00D7" })] }), experiments.map(function (experiment) {
-                var selectId = "experiment-".concat(experiment.name);
-                return (jsxRuntimeExports.jsxs("div", { style: { marginBottom: '10px' }, children: [jsxRuntimeExports.jsx("label", { htmlFor: selectId, style: { display: 'block', marginBottom: '5px' }, children: experiment.label }), jsxRuntimeExports.jsxs("select", { id: selectId, value: activeExperiments[experiment.name] || '', onChange: function (e) { return setExperimentVariant(experiment.name, e.target.value); }, style: {
+                        }, children: "\u00D7" })] }), experiments.map((experiment) => {
+                const selectId = `experiment-${experiment.name}`;
+                return (jsxRuntimeExports.jsxs("div", { style: { marginBottom: '10px' }, children: [jsxRuntimeExports.jsx("label", { htmlFor: selectId, style: { display: 'block', marginBottom: '5px' }, children: experiment.label }), jsxRuntimeExports.jsxs("select", { id: selectId, value: activeExperiments[experiment.name] || '', onChange: (e) => setExperimentVariant(experiment.name, e.target.value), style: {
                                 width: '100%',
                                 padding: '5px',
                                 backgroundColor: '#2a2a2a',
                                 color: '#ffffff',
                                 border: '1px solid #3a3a3a',
                                 borderRadius: '4px'
-                            }, children: [jsxRuntimeExports.jsx("option", { value: "", children: "Default" }), experiment.possibleValues.map(function (value) { return (jsxRuntimeExports.jsx("option", { value: value, children: value }, value)); })] })] }, experiment.name));
+                            }, children: [jsxRuntimeExports.jsx("option", { value: "", children: "Default" }), experiment.possibleValues.map((value) => (jsxRuntimeExports.jsx("option", { value: value, children: value }, value)))] })] }, experiment.name));
             }), jsxRuntimeExports.jsxs("div", { style: { marginTop: '15px', fontSize: '12px', color: '#888' }, children: ["Environment: ", isLovableEnvironment ? 'Lovable' : 'Production'] })] }));
 };
-var useExperimentsContext = function () {
-    var context = useContext(ExperimentsContext);
+const useExperimentsContext = () => {
+    const context = useContext(ExperimentsContext);
     if (!context) {
         throw new Error('useExperimentsContext must be used within ExperimentsProvider');
     }
@@ -1675,8 +1609,8 @@ var useExperimentsContext = function () {
 };
 
 function useExperiment(experimentName, defaultValue) {
-    var getExperimentVariant = useExperimentsContext().getExperimentVariant;
-    var variant = getExperimentVariant(experimentName);
+    const { getExperimentVariant } = useExperimentsContext();
+    const variant = getExperimentVariant(experimentName);
     return variant || defaultValue;
 }
 
@@ -1684,22 +1618,21 @@ function useExperiment(experimentName, defaultValue) {
  * Custom hook to manage pricing plan selection and signup process
  */
 function usePricingSignup() {
-    var _this = this;
-    var _a = useState(""), email = _a[0], setEmail = _a[1];
-    var _b = useState(null), selectedTier = _b[0], setSelectedTier = _b[1];
-    var _c = useState(false), isSubmitting = _c[0], setIsSubmitting = _c[1];
-    var _d = useState(false), showModal = _d[0], setShowModal = _d[1];
+    const [email, setEmail] = useState("");
+    const [selectedTier, setSelectedTier] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     /**
      * Validates email format
      */
-    var validateEmail = function (email) {
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
     /**
      * Handles plan selection and tracks the selection in analytics
      */
-    var handlePlanClick = function (plan) {
+    const handlePlanClick = (plan) => {
         setSelectedTier(plan);
         setShowModal(true);
         trackTierSelection({
@@ -1712,108 +1645,97 @@ function usePricingSignup() {
      * Handles the signup form submission
      * Returns true if signup was successful, false otherwise
      */
-    var handleSubmit = function (e) { return __awaiter(_this, void 0, void 0, function () {
-        var hostname, subdomain, signupCountsJSON, signupCounts, subdomainCount, MAX_SIGNUPS_PER_PAGE, adminEmails, response, data, error_1;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    e.preventDefault();
-                    if (!email || !validateEmail(email)) {
-                        toast.error("Please enter a valid email address");
-                        return [2 /*return*/, false];
-                    }
-                    if (!selectedTier) {
-                        toast.error("Please select a plan");
-                        return [2 /*return*/, false];
-                    }
-                    hostname = window.location.hostname;
-                    subdomain = hostname.split(".")[0];
-                    signupCountsJSON = localStorage.getItem("signupCounts") || "{}";
-                    signupCounts = JSON.parse(signupCountsJSON);
-                    subdomainCount = signupCounts[subdomain] || 0;
-                    MAX_SIGNUPS_PER_PAGE = 1;
-                    adminEmails = ((_a = import.meta.env.VITE_ADMIN_EMAILS) === null || _a === void 0 ? void 0 : _a.split(",").map(function (email) {
-                        return email.trim();
-                    })) || [];
-                    if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
-                        !adminEmails.includes(email)) {
-                        // Block the signup for this specific landing page
-                        toast.success("You're on the list! We'll let you know when a spot opens up!");
-                        return [2 /*return*/, false];
-                    }
-                    trackSignupAttempt({
-                        id: selectedTier.id.toString(),
-                        name: selectedTier.name,
-                        price: selectedTier.price,
-                    });
-                    setIsSubmitting(true);
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 4, 5, 6]);
-                    return [4 /*yield*/, fetch("https://cprlzjigtonyooedikbe.supabase.co/functions/v1/signup", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer ".concat(import.meta.env.VITE_SUPABASE_KEY),
-                            },
-                            body: JSON.stringify({
-                                email: email,
-                                tierId: selectedTier.id,
-                            }),
-                        })];
-                case 2:
-                    response = _b.sent();
-                    return [4 /*yield*/, response.json()];
-                case 3:
-                    data = _b.sent();
-                    if (!response.ok) {
-                        throw new Error(data.error || "Failed to sign up");
-                    }
-                    trackSignupSuccess({
-                        id: selectedTier.id.toString(),
-                        name: selectedTier.name,
-                        price: selectedTier.price,
-                        email: email,
-                    });
-                    // Increment signup count for this subdomain only
-                    signupCounts[subdomain] = subdomainCount + 1;
-                    localStorage.setItem("signupCounts", JSON.stringify(signupCounts));
-                    toast.success("Thank you for signing up. We'll be in touch soon!");
-                    setEmail("");
-                    setShowModal(false);
-                    setSelectedTier(null);
-                    return [2 /*return*/, true];
-                case 4:
-                    error_1 = _b.sent();
-                    console.error("Signup error:", error_1);
-                    trackSignupError(error_1 instanceof Error ? error_1.message : "Failed to sign up", selectedTier
-                        ? {
-                            id: selectedTier.id.toString(),
-                            name: selectedTier.name,
-                        }
-                        : undefined);
-                    toast.error(error_1 instanceof Error
-                        ? error_1.message
-                        : "Failed to sign up. Please try again.");
-                    return [2 /*return*/, false];
-                case 5:
-                    setIsSubmitting(false);
-                    return [7 /*endfinally*/];
-                case 6: return [2 /*return*/];
-            }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!email || !validateEmail(email)) {
+            toast.error("Please enter a valid email address");
+            return false;
+        }
+        if (!selectedTier) {
+            toast.error("Please select a plan");
+            return false;
+        }
+        // Extract subdomain from current URL
+        const hostname = window.location.hostname;
+        const subdomain = hostname.split(".")[0];
+        // Get the signup counts object from localStorage
+        const signupCountsJSON = localStorage.getItem("signupCounts") || "{}";
+        const signupCounts = JSON.parse(signupCountsJSON);
+        // Get count for this specific subdomain
+        const subdomainCount = signupCounts[subdomain] || 0;
+        // Set maximum allowed signups per landing page
+        const MAX_SIGNUPS_PER_PAGE = 1;
+        const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [];
+        if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
+            !adminEmails.includes(email)) {
+            // Block the signup for this specific landing page
+            toast.success("You're on the list! We'll let you know when a spot opens up!");
+            return false;
+        }
+        trackSignupAttempt({
+            id: selectedTier.id.toString(),
+            name: selectedTier.name,
+            price: selectedTier.price,
         });
-    }); };
+        setIsSubmitting(true);
+        try {
+            const response = await fetch("https://cprlzjigtonyooedikbe.supabase.co/functions/v1/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_KEY}`,
+                },
+                body: JSON.stringify({
+                    email,
+                    tierId: selectedTier.id,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to sign up");
+            }
+            trackSignupSuccess({
+                id: selectedTier.id.toString(),
+                name: selectedTier.name,
+                price: selectedTier.price,
+                email,
+            });
+            // Increment signup count for this subdomain only
+            signupCounts[subdomain] = subdomainCount + 1;
+            localStorage.setItem("signupCounts", JSON.stringify(signupCounts));
+            toast.success("Thank you for signing up. We'll be in touch soon!");
+            setEmail("");
+            setShowModal(false);
+            setSelectedTier(null);
+            return true;
+        }
+        catch (error) {
+            console.error("Signup error:", error);
+            trackSignupError(error instanceof Error ? error.message : "Failed to sign up", selectedTier
+                ? {
+                    id: selectedTier.id.toString(),
+                    name: selectedTier.name,
+                }
+                : undefined);
+            toast.error(error instanceof Error
+                ? error.message
+                : "Failed to sign up. Please try again.");
+            return false;
+        }
+        finally {
+            setIsSubmitting(false);
+        }
+    };
     return {
-        email: email,
-        setEmail: setEmail,
-        selectedTier: selectedTier,
-        isSubmitting: isSubmitting,
-        showModal: showModal,
-        setShowModal: setShowModal,
-        handlePlanClick: handlePlanClick,
-        handleSubmit: handleSubmit,
-        validateEmail: validateEmail,
+        email,
+        setEmail,
+        selectedTier,
+        isSubmitting,
+        showModal,
+        setShowModal,
+        handlePlanClick,
+        handleSubmit,
+        validateEmail,
     };
 }
 

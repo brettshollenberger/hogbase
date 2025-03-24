@@ -1,65 +1,53 @@
-import React from 'react';
-import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as React from "react";
+import { Button as BaseButton, ButtonProps } from "@/components/ui/button";
 import { trackCTAClick } from '../utils/analytics';
 
-interface CTAButtonProps {
-  text: string;
-  className?: string;
-  onClick?: () => void;
-  variant?: 'default' | 'outline';
-  size?: 'default' | 'lg' | 'sm';
-  href?: string;
-  section?: string;
-  children?: React.ReactNode;
-}
-
-const CTAButton: React.FC<CTAButtonProps> = ({ 
-  text, 
-  className = '', 
-  onClick,
-  variant = 'default',
-  size = 'default',
-  href,
-  section = 'general',
-  children
-}) => {
-  const handleClick = () => {
-    trackCTAClick(text, section);
-    onClick?.();
-  };
-
-  const ButtonContent = () => (
-    <>
-      {text}
-      {children ? children : <ArrowRight className="ml-2 h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" />}
-    </>
-  );
-
-  const classes = className ? className : `group ${size === 'lg' ? 'text-lg py-5 px-8' : ''}`;
-
-  const buttonProps = {
-    className: classes,
-    variant,
-    onClick: handleClick
-  };
-
-  if (href) {
+export const TrackedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, ref) => {
+    const { onClick, children, ...restProps } = props;
+    
+    const handleClick = React.useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        // Extract button text
+        let buttonText = "";
+        
+        // Handle different types of children to extract text
+        if (typeof children === "string") {
+          buttonText = children;
+        } else if (React.isValidElement(children)) {
+          // If children is a React element, try to extract text content
+          const childrenArray = React.Children.toArray(children);
+          buttonText = childrenArray
+            .map(child => {
+              if (typeof child === "string") return child;
+              if (typeof child === "number") return String(child);
+              return "";
+            })
+            .join(" ")
+            .trim();
+        }
+        
+        // Track the click with the button text
+        trackCTAClick(buttonText || "Unknown");
+        
+        // Call the original onClick if it exists
+        if (onClick) {
+          onClick(event);
+        }
+      },
+      [onClick, children]
+    );
+    
     return (
-      <Link to={href}>
-        <Button {...buttonProps}>
-          <ButtonContent />
-        </Button>
-      </Link>
+      <BaseButton
+        ref={ref}
+        onClick={handleClick}
+        {...restProps}
+      >
+        {children}
+      </BaseButton>
     );
   }
+);
 
-  return (
-    <Button {...buttonProps}>
-      <ButtonContent />
-    </Button>
-  );
-};
-
-export default CTAButton;
+TrackedButton.displayName = "TrackedButton";

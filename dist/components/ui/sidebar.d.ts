@@ -47,7 +47,7 @@ declare const SidebarMenuButton: React.ForwardRefExoticComponent<Omit<React.Clas
 } & VariantProps<(props?: ({
     variant?: "default" | "outline" | null | undefined;
     size?: "default" | "sm" | "lg" | null | undefined;
-} & import("class-variance-authority/dist/types").ClassProp) | undefined) => string>, "ref"> & React.RefAttributes<HTMLButtonElement>>;
+} & import("class-variance-authority/types").ClassProp) | undefined) => string>, "ref"> & React.RefAttributes<HTMLButtonElement>>;
 declare const SidebarMenuAction: React.ForwardRefExoticComponent<Omit<React.ClassAttributes<HTMLButtonElement> & React.ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean;
     showOnHover?: boolean;
