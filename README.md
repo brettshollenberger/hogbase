@@ -68,6 +68,56 @@ function HeroSection() {
 export POSTHOG_API_KEY=your-project-api-key
 ```
 
+6. Add important analytics to your codebase:
+
+Your index page should include initializeAnalytics and trackPageView:
+
+```tsx
+import { initializeAnalytics, trackPageView } from "hogbase";
+import { useEffect } from "react";
+
+export default function Index() {
+  useEffect(() => {
+    trackPageView("home");
+    initializeAnalytics();
+  }, []);
+
+  return <YourIndexPage />;
+}
+```
+
+All other pages should include `trackPageView`:
+
+```tsx
+import { trackPageView } from "hogbase";
+import { useEffect } from "react";
+
+export default function Pricing() {
+  useEffect(() => {
+    trackPageView("page");
+  }, []);
+
+  return <YourPage />;
+}
+```
+
+- All CTAs should have `trackCTAClick` when the user clicks the CTA
+- All links should have `trackLinkClick` when the user clicks the link
+- Any pricing pages should use the `usePricingSignup` hook
+
+```tsx
+import { usePricingSignup } from "hogbase";
+
+const {
+  email,
+  selectedTier,
+  isSubmitting,
+  showModal,
+  handlePlanClick,
+  handleSubmit,
+} = usePricingSignup();
+```
+
 ## Admin Panel
 
 The admin panel is automatically shown in:

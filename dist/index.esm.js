@@ -1794,8 +1794,6 @@ Button.displayName = "Button";
 
 const TrackedButton = ({ text, className = '', onClick, variant = 'default', size = 'default', href, section = 'general', icon, iconPosition = 'right', children, ...restProps }) => {
     const handleClick = () => {
-        debugger;
-        console.log(`Doing a big boi track ${text} ${section}`);
         trackCTAClick(text, section);
         onClick?.();
     };

@@ -28,8 +28,6 @@ export const TrackedButton: React.FC<TrackedButtonProps> = ({
   ...restProps
 }) => {
   const handleClick = () => {
-    debugger;
-    console.log(`Doing a big boi track ${text} ${section}`)
     trackCTAClick(text, section);
     onClick?.();
   };
