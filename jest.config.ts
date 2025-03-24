@@ -6,7 +6,6 @@ const config: Config.InitialOptions = {
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^posthog-js$': '<rootDir>/src/utils/__mocks__/posthog-js.ts'
   },
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
@@ -20,7 +19,12 @@ const config: Config.InitialOptions = {
   ],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/']
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  globals: {
+    'ts-jest': {
+      useESM: true
+    }
+  }
 };
 
 export default config;

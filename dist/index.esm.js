@@ -1,6 +1,13 @@
-import require$$0, { createContext, useState, useEffect, useContext } from 'react';
+import * as require$$0 from 'react';
+import require$$0__default, { createContext, useState, useEffect, useContext } from 'react';
 import posthog from 'posthog-js';
 import { toast } from 'sonner';
+import { Slot } from '@radix-ui/react-slot';
+import { cva } from 'class-variance-authority';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 var jsxRuntime = {exports: {}};
 
@@ -21,7 +28,7 @@ var hasRequiredReactJsxRuntime_production_min;
 function requireReactJsxRuntime_production_min () {
 	if (hasRequiredReactJsxRuntime_production_min) return reactJsxRuntime_production_min;
 	hasRequiredReactJsxRuntime_production_min = 1;
-var f=require$$0,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
+var f=require$$0__default,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
 	function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a) void 0===d[b]&&(d[b]=a[b]);return {$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}reactJsxRuntime_production_min.Fragment=l;reactJsxRuntime_production_min.jsx=q;reactJsxRuntime_production_min.jsxs=q;
 	return reactJsxRuntime_production_min;
 }
@@ -47,7 +54,7 @@ function requireReactJsxRuntime_development () {
 	if (process.env.NODE_ENV !== "production") {
 	  (function() {
 
-	var React = require$$0;
+	var React = require$$0__default;
 
 	// ATTENTION
 	// When adding new symbols to this file,
@@ -1393,13 +1400,23 @@ const updateUrlWithExperiment = (experimentName, value) => {
     window.history.replaceState({}, '', url.toString());
 };
 
-const posthog_key = import.meta.env.VITE_POSTHOG_KEY;
-const posthog_local_storage_key = `ph_${posthog_key}_posthog`;
-posthog.init(posthog_key, {
-    api_host: "https://us.i.posthog.com",
-    ui_host: "https://us.posthog.com",
-    person_profiles: "always",
-});
+// Environment configuration
+const config = {
+    posthogKey: process.env.VITE_POSTHOG_KEY || 'test-key',
+    posthogApiHost: "https://us.i.posthog.com",
+    posthogUiHost: "https://us.posthog.com",
+};
+
+// Get PostHog key from config
+const posthog_local_storage_key = `ph_${config.posthogKey}_posthog`;
+// Only initialize PostHog if we're in a browser environment
+if (typeof window !== 'undefined') {
+    posthog.init(config.posthogKey, {
+        api_host: config.posthogApiHost,
+        ui_host: config.posthogUiHost,
+        person_profiles: "always",
+    });
+}
 /**
  * Identify a user with PostHog.
  *
@@ -1739,5 +1756,59 @@ function usePricingSignup() {
     };
 }
 
-export { ExperimentsProvider, identify, initializeAnalytics, trackCTAClick, trackEvent, trackLinkClick, trackPageView, trackSignupAttempt, trackSignupError, trackSignupSuccess, trackTierSelection, useExperiment, useExperimentsContext, usePricingSignup };
+function cn(...inputs) {
+    return twMerge(clsx(inputs));
+}
+
+const buttonVariants = cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
+    variants: {
+        variant: {
+            default: "bg-primary text-primary-foreground hover:bg-primary/90",
+            destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+            outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+            ghost: "hover:bg-accent hover:text-accent-foreground",
+            link: "text-primary underline-offset-4 hover:underline",
+        },
+        size: {
+            default: "h-10 px-4 py-2",
+            sm: "h-9 rounded-md px-3",
+            lg: "h-11 rounded-md px-8",
+            icon: "h-10 w-10",
+        },
+    },
+    defaultVariants: {
+        variant: "default",
+        size: "default",
+    },
+});
+const Button = require$$0.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (jsxRuntimeExports.jsx(Comp, { className: cn(buttonVariants({ variant, size, className })), ref: ref, ...props }));
+});
+Button.displayName = "Button";
+
+const TrackedButton = ({ text, className = '', onClick, variant = 'default', size = 'default', href, section = 'general', icon, iconPosition = 'right', children, ...restProps }) => {
+    const handleClick = () => {
+        trackCTAClick(text, section);
+        onClick?.();
+    };
+    // Default icon is ArrowRight if none provided
+    const iconElement = icon || jsxRuntimeExports.jsx(ArrowRight, { className: "h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" });
+    const buttonProps = {
+        className: `group ${className}`,
+        variant,
+        size,
+        onClick: handleClick,
+        ...restProps
+    };
+    const content = (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [iconPosition === 'left' && jsxRuntimeExports.jsx("span", { className: "mr-2", children: iconElement }), text, children, iconPosition === 'right' && jsxRuntimeExports.jsx("span", { className: "ml-2", children: iconElement })] }));
+    if (href) {
+        const isExternal = href.startsWith('http');
+        return isExternal ? (jsxRuntimeExports.jsx("a", { href: href, target: "_blank", rel: "noopener noreferrer", children: jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content }) })) : (jsxRuntimeExports.jsx(Link, { to: href, children: jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content }) }));
+    }
+    return jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content });
+};
+
+export { ExperimentsProvider, TrackedButton, identify, initializeAnalytics, trackCTAClick, trackEvent, trackLinkClick, trackPageView, trackSignupAttempt, trackSignupError, trackSignupSuccess, trackTierSelection, useExperiment, useExperimentsContext, usePricingSignup };
 //# sourceMappingURL=index.esm.js.map

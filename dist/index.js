@@ -1,8 +1,13 @@
-'use strict';
-
-var require$$0 = require('react');
-var posthog = require('posthog-js');
-var sonner = require('sonner');
+import * as require$$0 from 'react';
+import require$$0__default, { createContext, useState, useEffect, useContext } from 'react';
+import posthog from 'posthog-js';
+import { toast } from 'sonner';
+import { Slot } from '@radix-ui/react-slot';
+import { cva } from 'class-variance-authority';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 var jsxRuntime = {exports: {}};
 
@@ -23,7 +28,7 @@ var hasRequiredReactJsxRuntime_production_min;
 function requireReactJsxRuntime_production_min () {
 	if (hasRequiredReactJsxRuntime_production_min) return reactJsxRuntime_production_min;
 	hasRequiredReactJsxRuntime_production_min = 1;
-var f=require$$0,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
+var f=require$$0__default,k=Symbol.for("react.element"),l=Symbol.for("react.fragment"),m=Object.prototype.hasOwnProperty,n=f.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,p={key:true,ref:true,__self:true,__source:true};
 	function q(c,a,g){var b,d={},e=null,h=null;void 0!==g&&(e=""+g);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(h=a.ref);for(b in a)m.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a) void 0===d[b]&&(d[b]=a[b]);return {$$typeof:k,type:c,key:e,ref:h,props:d,_owner:n.current}}reactJsxRuntime_production_min.Fragment=l;reactJsxRuntime_production_min.jsx=q;reactJsxRuntime_production_min.jsxs=q;
 	return reactJsxRuntime_production_min;
 }
@@ -49,7 +54,7 @@ function requireReactJsxRuntime_development () {
 	if (process.env.NODE_ENV !== "production") {
 	  (function() {
 
-	var React = require$$0;
+	var React = require$$0__default;
 
 	// ATTENTION
 	// When adding new symbols to this file,
@@ -1395,13 +1400,23 @@ const updateUrlWithExperiment = (experimentName, value) => {
     window.history.replaceState({}, '', url.toString());
 };
 
-const posthog_key = undefined.VITE_POSTHOG_KEY;
-const posthog_local_storage_key = `ph_${posthog_key}_posthog`;
-posthog.init(posthog_key, {
-    api_host: "https://us.i.posthog.com",
-    ui_host: "https://us.posthog.com",
-    person_profiles: "always",
-});
+// Environment configuration
+const config = {
+    posthogKey: process.env.VITE_POSTHOG_KEY || 'test-key',
+    posthogApiHost: "https://us.i.posthog.com",
+    posthogUiHost: "https://us.posthog.com",
+};
+
+// Get PostHog key from config
+const posthog_local_storage_key = `ph_${config.posthogKey}_posthog`;
+// Only initialize PostHog if we're in a browser environment
+if (typeof window !== 'undefined') {
+    posthog.init(config.posthogKey, {
+        api_host: config.posthogApiHost,
+        ui_host: config.posthogUiHost,
+        person_profiles: "always",
+    });
+}
 /**
  * Identify a user with PostHog.
  *
@@ -1515,12 +1530,12 @@ const trackExperimentView = (posthogClient, experiment, variant, source = 'url')
     });
 };
 
-const ExperimentsContext = require$$0.createContext(undefined);
+const ExperimentsContext = createContext(undefined);
 const ExperimentsProvider = ({ experiments, posthogClient, children, defaultValues = {}, showAdminPanel = false, }) => {
-    const [activeExperiments, setActiveExperiments] = require$$0.useState({});
-    const [adminPanelVisible, setAdminPanelVisible] = require$$0.useState(false);
+    const [activeExperiments, setActiveExperiments] = useState({});
+    const [adminPanelVisible, setAdminPanelVisible] = useState(false);
     const lovableEnvironment = isLovableEnvironment();
-    require$$0.useEffect(() => {
+    useEffect(() => {
         // Initialize from URL parameters
         const urlExperiments = parseExperimentParams();
         setActiveExperiments((prev) => ({
@@ -1531,7 +1546,7 @@ const ExperimentsProvider = ({ experiments, posthogClient, children, defaultValu
         // Initialize admin panel visibility
         setAdminPanelVisible(showAdminPanel || isAdminMode());
     }, []);
-    require$$0.useEffect(() => {
+    useEffect(() => {
         // Track experiments in PostHog
         Object.entries(activeExperiments).forEach(([experiment, variant]) => {
             if (typeof variant === 'string') {
@@ -1568,7 +1583,7 @@ const ExperimentsProvider = ({ experiments, posthogClient, children, defaultValu
     return (jsxRuntimeExports.jsxs(ExperimentsContext.Provider, { value: value, children: [children, adminPanelVisible && jsxRuntimeExports.jsx(AdminPanel, {})] }));
 };
 const AdminPanel = () => {
-    const context = require$$0.useContext(ExperimentsContext);
+    const context = useContext(ExperimentsContext);
     if (!context)
         throw new Error('AdminPanel must be used within ExperimentsProvider');
     const { experiments, activeExperiments, setExperimentVariant, toggleAdminPanel, isLovableEnvironment } = context;
@@ -1603,7 +1618,7 @@ const AdminPanel = () => {
             }), jsxRuntimeExports.jsxs("div", { style: { marginTop: '15px', fontSize: '12px', color: '#888' }, children: ["Environment: ", isLovableEnvironment ? 'Lovable' : 'Production'] })] }));
 };
 const useExperimentsContext = () => {
-    const context = require$$0.useContext(ExperimentsContext);
+    const context = useContext(ExperimentsContext);
     if (!context) {
         throw new Error('useExperimentsContext must be used within ExperimentsProvider');
     }
@@ -1620,10 +1635,10 @@ function useExperiment(experimentName, defaultValue) {
  * Custom hook to manage pricing plan selection and signup process
  */
 function usePricingSignup() {
-    const [email, setEmail] = require$$0.useState("");
-    const [selectedTier, setSelectedTier] = require$$0.useState(null);
-    const [isSubmitting, setIsSubmitting] = require$$0.useState(false);
-    const [showModal, setShowModal] = require$$0.useState(false);
+    const [email, setEmail] = useState("");
+    const [selectedTier, setSelectedTier] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     /**
      * Validates email format
      */
@@ -1650,11 +1665,11 @@ function usePricingSignup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !validateEmail(email)) {
-            sonner.toast.error("Please enter a valid email address");
+            toast.error("Please enter a valid email address");
             return false;
         }
         if (!selectedTier) {
-            sonner.toast.error("Please select a plan");
+            toast.error("Please select a plan");
             return false;
         }
         // Extract subdomain from current URL
@@ -1667,11 +1682,11 @@ function usePricingSignup() {
         const subdomainCount = signupCounts[subdomain] || 0;
         // Set maximum allowed signups per landing page
         const MAX_SIGNUPS_PER_PAGE = 1;
-        const adminEmails = undefined.VITE_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [];
+        const adminEmails = import.meta.env.VITE_ADMIN_EMAILS?.split(",").map((email) => email.trim()) || [];
         if (subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
             !adminEmails.includes(email)) {
             // Block the signup for this specific landing page
-            sonner.toast.success("You're on the list! We'll let you know when a spot opens up!");
+            toast.success("You're on the list! We'll let you know when a spot opens up!");
             return false;
         }
         trackSignupAttempt({
@@ -1685,7 +1700,7 @@ function usePricingSignup() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${undefined.VITE_SUPABASE_KEY}`,
+                    Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_KEY}`,
                 },
                 body: JSON.stringify({
                     email,
@@ -1705,7 +1720,7 @@ function usePricingSignup() {
             // Increment signup count for this subdomain only
             signupCounts[subdomain] = subdomainCount + 1;
             localStorage.setItem("signupCounts", JSON.stringify(signupCounts));
-            sonner.toast.success("Thank you for signing up. We'll be in touch soon!");
+            toast.success("Thank you for signing up. We'll be in touch soon!");
             setEmail("");
             setShowModal(false);
             setSelectedTier(null);
@@ -1719,7 +1734,7 @@ function usePricingSignup() {
                     name: selectedTier.name,
                 }
                 : undefined);
-            sonner.toast.error(error instanceof Error
+            toast.error(error instanceof Error
                 ? error.message
                 : "Failed to sign up. Please try again.");
             return false;
@@ -1741,18 +1756,59 @@ function usePricingSignup() {
     };
 }
 
-exports.ExperimentsProvider = ExperimentsProvider;
-exports.identify = identify;
-exports.initializeAnalytics = initializeAnalytics;
-exports.trackCTAClick = trackCTAClick;
-exports.trackEvent = trackEvent;
-exports.trackLinkClick = trackLinkClick;
-exports.trackPageView = trackPageView;
-exports.trackSignupAttempt = trackSignupAttempt;
-exports.trackSignupError = trackSignupError;
-exports.trackSignupSuccess = trackSignupSuccess;
-exports.trackTierSelection = trackTierSelection;
-exports.useExperiment = useExperiment;
-exports.useExperimentsContext = useExperimentsContext;
-exports.usePricingSignup = usePricingSignup;
+function cn(...inputs) {
+    return twMerge(clsx(inputs));
+}
+
+const buttonVariants = cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
+    variants: {
+        variant: {
+            default: "bg-primary text-primary-foreground hover:bg-primary/90",
+            destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+            outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+            ghost: "hover:bg-accent hover:text-accent-foreground",
+            link: "text-primary underline-offset-4 hover:underline",
+        },
+        size: {
+            default: "h-10 px-4 py-2",
+            sm: "h-9 rounded-md px-3",
+            lg: "h-11 rounded-md px-8",
+            icon: "h-10 w-10",
+        },
+    },
+    defaultVariants: {
+        variant: "default",
+        size: "default",
+    },
+});
+const Button = require$$0.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (jsxRuntimeExports.jsx(Comp, { className: cn(buttonVariants({ variant, size, className })), ref: ref, ...props }));
+});
+Button.displayName = "Button";
+
+const TrackedButton = ({ text, className = '', onClick, variant = 'default', size = 'default', href, section = 'general', icon, iconPosition = 'right', children, ...restProps }) => {
+    const handleClick = () => {
+        trackCTAClick(text, section);
+        onClick?.();
+    };
+    // Default icon is ArrowRight if none provided
+    const iconElement = icon || jsxRuntimeExports.jsx(ArrowRight, { className: "h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" });
+    const buttonProps = {
+        className: `group ${className}`,
+        variant,
+        size,
+        onClick: handleClick,
+        ...restProps
+    };
+    const content = (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [iconPosition === 'left' && jsxRuntimeExports.jsx("span", { className: "mr-2", children: iconElement }), text, children, iconPosition === 'right' && jsxRuntimeExports.jsx("span", { className: "ml-2", children: iconElement })] }));
+    if (href) {
+        const isExternal = href.startsWith('http');
+        return isExternal ? (jsxRuntimeExports.jsx("a", { href: href, target: "_blank", rel: "noopener noreferrer", children: jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content }) })) : (jsxRuntimeExports.jsx(Link, { to: href, children: jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content }) }));
+    }
+    return jsxRuntimeExports.jsx(Button, { ...buttonProps, children: content });
+};
+
+export { ExperimentsProvider, TrackedButton, identify, initializeAnalytics, trackCTAClick, trackEvent, trackLinkClick, trackPageView, trackSignupAttempt, trackSignupError, trackSignupSuccess, trackTierSelection, useExperiment, useExperimentsContext, usePricingSignup };
 //# sourceMappingURL=index.js.map
