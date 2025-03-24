@@ -3,12 +3,12 @@ export interface PricingPlan {
     name: string;
     description: string;
     price: number;
-    billing: string;
-    icon: React.ReactNode;
-    features: string[];
-    cta: string;
-    color: string;
-    highlighted: boolean;
+    billing?: string;
+    icon?: React.ReactNode;
+    features?: string[];
+    cta?: string;
+    color?: string;
+    highlighted?: boolean;
 }
 export interface UseSignupResult {
     email: string;
