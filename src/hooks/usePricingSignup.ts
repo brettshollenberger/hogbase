@@ -11,6 +11,7 @@ import {
 export interface PricingPlan {
   id: number;
   name: string;
+  description: string;
   price: number;
   billing: string;
   icon: React.ReactNode;
