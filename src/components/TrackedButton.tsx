@@ -3,6 +3,7 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { trackCTAClick } from '../utils/analytics';
+
 interface TrackedButtonProps extends Omit<ButtonProps, 'onClick'> {
   text: string;
   onClick?: () => void;
@@ -13,7 +14,7 @@ interface TrackedButtonProps extends Omit<ButtonProps, 'onClick'> {
   iconPosition?: 'left' | 'right';
 }
 
-const TrackedButton: React.FC<TrackedButtonProps> = ({
+export const TrackedButton: React.FC<TrackedButtonProps> = ({
   text,
   className = '',
   onClick,
@@ -66,5 +67,3 @@ const TrackedButton: React.FC<TrackedButtonProps> = ({
 
   return <Button {...buttonProps}>{content}</Button>;
 };
-
-export default TrackedButton;
