@@ -147,7 +147,7 @@ export function usePricingSignup(): UseSignupResult {
 
       toast.success("Thank you for signing up. We'll be in touch soon!");
       setEmail("");
-      setShowBetaModal(false);
+      setShowModal(false);
       setSelectedTier(null);
       return true;
     } catch (error) {
