@@ -1,0 +1,13 @@
+node_modules/
+documentation/
+src/
+.git/
+.gitignore
+.eslintrc.js
+jest.config.js
+rollup.config.js
+tsconfig.json
+*.test.ts
+*.test.tsx
+coverage/
+.DS_Store
