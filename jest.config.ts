@@ -13,10 +13,18 @@ const config: Config.InitialOptions = {
       tsconfig: '<rootDir>/tsconfig.json'
     }]
   },
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.ts',
+    '<rootDir>/src/setupTests.ts'
+  ],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/']
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  globals: {
+    'ts-jest': {
+      useESM: true
+    }
+  }
 };
 
 export default config;
