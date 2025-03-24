@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode, Chang
 import { ExperimentsContextType, ExperimentsProviderProps, Experiment } from './types';
 import { isLovableEnvironment, isAdminMode } from './utils/environment';
 import { parseExperimentParams, updateUrlWithExperiment } from './utils/url';
-import { trackExperimentView } from './utils/tracking';
+import { trackExperimentView } from './utils/analytics';
 
 const ExperimentsContext = createContext<ExperimentsContextType | undefined>(undefined);
 

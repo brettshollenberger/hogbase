@@ -22,9 +22,11 @@
     "react"
   ],
   "dependencies": {
+    "lucide-react": "^0.483.0",
     "posthog-js": "^1.96.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
+    "react-router-dom": "^7.4.0",
     "sonner": "^1.1.0",
     "tslib": "^2.5.0"
   },
