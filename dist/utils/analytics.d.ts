@@ -49,3 +49,4 @@ export declare const trackSignupError: (error: string, tier?: {
     id: string;
     name: string;
 }) => void;
+export declare const trackExperimentView: (posthogClient: any, experiment: string, variant: string, source?: string) => void;
