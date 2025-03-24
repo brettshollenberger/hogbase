@@ -98,6 +98,7 @@ export function usePricingSignup(): UseSignupResult {
         email.trim()
       ) || [];
 
+    console.log("adminEmails", adminEmails);
     if (
       subdomainCount >= MAX_SIGNUPS_PER_PAGE &&
       !adminEmails.includes(email)
@@ -119,7 +120,7 @@ export function usePricingSignup(): UseSignupResult {
 
     try {
       const response = await fetch(
-        "https://cprlzjigtonyooedikbe.supabase.co/functions/v1/signup",
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/signup`,
         {
           method: "POST",
           headers: {
