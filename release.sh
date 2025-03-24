@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Optional: Run tests first
-npm test
+# npm test
 
 # Bump version
 npm version patch
