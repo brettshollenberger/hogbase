@@ -5,9 +5,12 @@ A powerful A/B testing library for web applications that integrates with Google 
 ## Features
 
 - URL parameter-driven experiments
-- PostHog integration for tracking
 - Admin panel for easy variant switching
+- PostHog integration for tracking
+- Default Posthog methods detailed in analytics.ts
 - Lovable integration
+
+## Google Ads Setup
 
 ## Basic Usage
 
@@ -148,6 +151,12 @@ npm run build
 
 ```bash
 npm test
+```
+
+4. Deploy
+
+```bash
+npm run release
 ```
 
 ## License

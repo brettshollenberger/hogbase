@@ -1,6 +1,6 @@
-# documentation/
 node_modules/
 build/
 __tests__/
 examples/
 jest.config.js
+prompts/

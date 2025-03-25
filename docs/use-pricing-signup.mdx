@@ -1,0 +1,115 @@
+---
+title: usePricingSignup
+type: hook
+tags: [pricing, signup, react-hooks, analytics]
+summary: React hook for managing pricing plan selection and signup flows.
+---
+
+# usePricingSignup
+
+## Overview
+
+The `usePricingSignup` hook manages the entire pricing plan selection and signup process, including analytics tracking, form validation, and API integration.
+
+## Usage
+
+```typescript
+import { usePricingSignup } from '@hogbase';
+
+function PricingPage() {
+  const {
+    email,
+    setEmail,
+    selectedTier,
+    isSubmitting,
+    showModal,
+    handlePlanClick,
+    handleSubmit,
+  } = usePricingSignup();
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      {plans.map(plan => (
+        <button
+          key={plan.id}
+          onClick={() => handlePlanClick(plan)}
+        >
+          {plan.name}
+        </button>
+      ))}
+    </form>
+  );
+}
+```
+
+## Features
+
+### State Management
+- Email input handling
+- Plan selection
+- Loading states
+- Modal visibility
+
+### Validation
+- Email format validation
+- Required field checks
+- Signup limit enforcement per landing page
+
+### Analytics Integration
+Automatically tracks:
+- Plan selection
+- Signup attempts
+- Successful signups
+- Error cases
+
+### API Integration
+- Handles signup API calls
+- Error handling
+- Success notifications
+
+## API
+
+### Hook Return Value
+
+```typescript
+interface UseSignupResult {
+  email: string;
+  setEmail: (email: string) => void;
+  selectedTier: PricingPlan | null;
+  isSubmitting: boolean;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
+  handlePlanClick: (plan: PricingPlan) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<boolean>;
+  validateEmail: (email: string) => boolean;
+}
+```
+
+### PricingPlan Interface
+
+```typescript
+interface PricingPlan {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  billing?: string;
+  icon?: React.ReactNode;
+  features?: string[];
+  cta?: string;
+  color?: string;
+  highlighted?: boolean;
+}
+```
+
+## Configuration
+
+Uses environment variables:
+- `VITE_SUPABASE_URL`: Supabase API URL
+- `VITE_SUPABASE_KEY`: Supabase API key
+- `VITE_ADMIN_EMAILS`: Comma-separated list of admin emails (bypass signup limits)

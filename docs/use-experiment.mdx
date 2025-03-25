@@ -1,0 +1,57 @@
+---
+title: useExperiment
+type: hook
+tags: [experiments, ab-testing, react-hooks]
+summary: React hook for accessing experiment variants in components.
+---
+
+# useExperiment
+
+## Overview
+
+The `useExperiment` hook provides easy access to experiment variants within React components. It's built on top of the ExperimentsProvider context.
+
+## Usage
+
+```typescript
+import { useExperiment } from '@hogbase';
+
+function HeroSection() {
+  const copyVariant = useExperiment('copy', 'default');
+
+  return (
+    <div>
+      {copyVariant === 'time_savings' && <h1>Save Hours Every Week!</h1>}
+      {copyVariant === 'customer_focused' && <h1>Attract More Customers</h1>}
+      {copyVariant === 'default' && <h1>Welcome!</h1>}
+    </div>
+  );
+}
+```
+
+## API
+
+### Hook Signature
+
+```typescript
+function useExperiment<T = string>(
+  experimentName: string, 
+  defaultValue: T
+): T
+```
+
+### Parameters
+
+- `experimentName`: The name of the experiment to get the variant for
+- `defaultValue`: The fallback value if no variant is assigned
+
+### Return Value
+
+Returns the current variant for the experiment, or the defaultValue if no variant is assigned.
+
+## Best Practices
+
+1. Always provide a default value that matches your type
+2. Use TypeScript generics for type safety
+3. Keep variant logic simple and contained
+4. Use with PostHog analytics for tracking

@@ -1,0 +1,78 @@
+---
+title: ExperimentsProvider
+type: component
+tags: [experiments, ab-testing, context, react]
+summary: React context provider for managing A/B testing experiments.
+---
+
+# ExperimentsProvider
+
+## Overview
+
+The `ExperimentsProvider` is a React context provider that manages A/B testing experiments in your application. It handles experiment variant assignment, persistence, and tracking.
+
+## Usage
+
+### Basic Setup
+
+```tsx
+import { ExperimentsProvider } from '@hogbase';
+
+const experiments = [
+  {
+    name: "copy",
+    label: "Copy Variations",
+    possibleValues: ["time_savings", "customer_focused"]
+  }
+];
+
+function App() {
+  return (
+    <ExperimentsProvider experiments={experiments}>
+      <YourApp />
+    </ExperimentsProvider>
+  );
+}
+```
+
+### Props
+
+```typescript
+interface ExperimentsProviderProps {
+  experiments: Experiment[];
+  showAdminPanel?: boolean;
+  children: React.ReactNode;
+}
+```
+
+## Features
+
+### Variant Assignment
+
+- Automatically assigns variants from URL parameters (e.g., `?copy=time_savings`)
+- Falls back to random assignment if no URL parameter is present
+- Tracks experiment assignments in PostHog
+
+### Admin Panel
+
+The admin panel is automatically shown when:
+- Running in Lovable environment (localhost)
+- URL includes `?admin=true`
+- `showAdminPanel` prop is true
+
+### Context API
+
+```typescript
+interface ExperimentsContextType {
+  experiments: Experiment[];
+  activeExperiments: Record<string, string>;
+  isLovableEnvironment: boolean;
+  adminPanelVisible: boolean;
+  getExperimentVariant: (name: string) => string | null;
+  setExperimentVariant: (name: string, variant: string) => void;
+  getExperimentConfig: (name: string) => Experiment | null;
+  toggleAdminPanel: () => void;
+}
+```
+
+Use these methods through the `useExperiment` hook or by directly accessing the context.

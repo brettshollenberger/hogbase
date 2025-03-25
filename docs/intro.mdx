@@ -1,0 +1,58 @@
+---
+title: Introduction
+sidebar_position: 1
+---
+
+# Hogbase Documentation
+
+Welcome to the Hogbase documentation! Hogbase is a powerful library for A/B testing and launching simple landing pages, with built-in analytics tracking.
+
+## Features
+
+- 🧪 **A/B Testing**: Easy-to-use experiment framework with URL parameter-driven variants
+- 📊 **Analytics**: Built-in PostHog integration for tracking user behavior
+- 🎯 **Landing Pages**: Tools for creating and managing landing pages
+- 💳 **Pricing**: Streamlined pricing and signup flow management
+
+## Quick Start
+
+1. Install Hogbase:
+
+```bash
+npm install hogbase
+```
+
+2. Set up your PostHog key:
+
+```bash
+export POSTHOG_API_KEY=your-project-api-key
+```
+
+3. Wrap your app with the ExperimentsProvider:
+
+```tsx
+import { ExperimentsProvider } from '@hogbase';
+
+const experiments = [
+  {
+    name: "copy",
+    label: "Copy Variations",
+    possibleValues: ["time_savings", "customer_focused"]
+  }
+];
+
+function App() {
+  return (
+    <ExperimentsProvider experiments={experiments}>
+      <YourApp />
+    </ExperimentsProvider>
+  );
+}
+```
+
+## Next Steps
+
+- Learn about [Analytics](./analytics)
+- Set up [Experiments](./experiments-provider)
+- Use the [Experiment Hook](./use-experiment)
+- Implement [Pricing Signup](./use-pricing-signup)
