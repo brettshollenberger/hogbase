@@ -1401,12 +1401,24 @@ const updateUrlWithExperiment = (experimentName, value) => {
 };
 
 // Environment configuration
-const REQUIRED_POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY;
-if (!REQUIRED_POSTHOG_KEY) {
-    console.error('PostHog key is not configured. Please set VITE_POSTHOG_KEY in your .env file.');
-}
+const getPosthogKey = () => {
+    // Try Vite environment
+    if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_POSTHOG_KEY) {
+        return import.meta.env.VITE_POSTHOG_KEY;
+    }
+    // Try process.env (Node.js/webpack environment)
+    if (typeof process !== 'undefined' && process.env?.VITE_POSTHOG_KEY) {
+        return process.env.VITE_POSTHOG_KEY;
+    }
+    // Try window._env_ (runtime environment variables)
+    if (typeof window !== 'undefined' && window._env_?.VITE_POSTHOG_KEY) {
+        return window._env_.VITE_POSTHOG_KEY;
+    }
+    console.warn('PostHog key is not configured. Please set VITE_POSTHOG_KEY in your environment configuration.');
+    return '';
+};
 const config = {
-    posthogKey: REQUIRED_POSTHOG_KEY || '',
+    posthogKey: getPosthogKey(),
     posthogApiHost: "https://us.i.posthog.com",
     posthogUiHost: "https://us.posthog.com",
 };
