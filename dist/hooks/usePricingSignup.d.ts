@@ -1,3 +1,7 @@
+export interface Feature {
+    name: string;
+    description: string;
+}
 export interface PricingPlan {
     id: number;
     name: string;
@@ -5,10 +9,11 @@ export interface PricingPlan {
     price: number;
     billing?: string;
     icon?: React.ReactNode;
-    features?: string[];
+    features?: Array<Feature | string>;
     cta?: string;
     color?: string;
     highlighted?: boolean;
+    included?: boolean;
 }
 export interface UseSignupResult {
     email: string;
