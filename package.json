@@ -1,5 +1,5 @@
 {
-  "name": "launch10",
+  "name": "hogbase",
   "version": "1.0.19",
   "description": "A/B testing library for web applications",
   "type": "module",
