@@ -1,5 +1,5 @@
 {
-  "name": "hogbase",
+  "name": "launch10",
   "version": "1.0.18",
   "description": "A/B testing library for web applications",
   "type": "module",
@@ -58,7 +58,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.5.0",
-    "hogbase": "^1.0.1",
+    "hogbase": "^1.0.18",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
