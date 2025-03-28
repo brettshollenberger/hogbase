@@ -121,6 +121,37 @@ const {
 } = usePricingSignup();
 ```
 
+## Environment Configuration
+
+The PostHog key can be configured in several ways:
+
+1. Using Vite environment variables:
+```
+# .env
+VITE_POSTHOG_KEY=your_key_here
+```
+
+2. Using Node.js/webpack environment variables:
+```javascript
+// webpack.config.js
+module.exports = {
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.VITE_POSTHOG_KEY': JSON.stringify('your_key_here')
+    })
+  ]
+};
+```
+
+3. Using runtime environment variables:
+```javascript
+window._env_ = {
+  VITE_POSTHOG_KEY: 'your_key_here'
+};
+```
+
+Choose the method that best fits your build environment.
+
 ## Admin Panel
 
 The admin panel is automatically shown in:

@@ -29,6 +29,7 @@ export declare const trackEvent: (eventName: string, properties?: Record<string,
 export declare const trackPageView: (pageName: string, section?: string) => void;
 export declare const trackLinkClick: (linkText: string, section?: string) => void;
 export declare const trackCTAClick: (buttonText: string, section?: string) => void;
+export declare const getProduct: () => string;
 export declare const trackTierSelection: (tier: {
     id: string;
     name: string;

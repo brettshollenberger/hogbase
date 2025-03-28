@@ -97,15 +97,20 @@ export const trackCTAClick = (buttonText: string, section?: string) => {
   });
 };
 
+export const getProduct = () => window.location.hostname.split(".")[0];
+
 export const trackTierSelection = (tier: {
   id: string;
   name: string;
   price: number;
 }) => {
+  const product = getProduct();
+
   trackEvent("tier_selected", {
     tier_id: tier.id,
     tier_name: tier.name,
     price: tier.price,
+    product: product,
   });
 };
 
@@ -114,10 +119,13 @@ export const trackSignupAttempt = (tier: {
   name: string;
   price: number;
 }) => {
+  const product = getProduct();
+
   trackEvent("signup_attempt", {
     tier_id: tier.id,
     tier_name: tier.name,
     price: tier.price,
+    product: product,
   });
 };
 
@@ -127,7 +135,7 @@ export const trackSignupSuccess = (tier: {
   price: number;
   email: string;
 }) => {
-  const product = window.location.hostname.split(".")[0];
+  const product = getProduct();
 
   if (window.__user?.id) {
     identify(window.__user.id, {
