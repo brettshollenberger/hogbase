@@ -1,6 +1,6 @@
 {
   "name": "launch10",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "A/B testing library for web applications",
   "type": "module",
   "main": "dist/index.js",
